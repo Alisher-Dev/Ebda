@@ -23,8 +23,8 @@ export class ProductController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  update(@Param("id") id: string, @Body() createProductDto: CreateProductDto) {
+    return this.productService.update(+id, createProductDto);
   }
 
   @Delete(":id")
