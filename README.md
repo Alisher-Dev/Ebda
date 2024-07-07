@@ -1,1 +1,9 @@
--- env
+# ENV
+
+PORT=7777
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=root
+DB_NAME=ebda
+DB_PORT=3306
