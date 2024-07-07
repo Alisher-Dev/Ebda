@@ -1,9 +1,10 @@
 import { IsIn, IsString } from "class-validator";
+import { FileType } from "src/helpers/types";
 
 export class CreateMediaDto {
   @IsString()
   url: string;
 
-  @IsIn(["video", "image"])
-  type: "video" | "image";
+  @IsIn(["image", "video"])
+  type: FileType;
 }

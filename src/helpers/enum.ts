@@ -1,14 +1,14 @@
 export enum FileEnum {
-  "video",
-  "image",
+  VIDEO = "video",
+  IMAGE = "image",
 }
 
 export enum DeliveryEnum {
-  "self delivery",
-  "deliver",
+  SELF = "self delivery",
+  DELIVER = "deliver",
 }
 
 export enum DeliveryTypeEnum {
-  "specified time",
-  "soon",
+  TIME = "specified time",
+  SOON = "soon",
 }

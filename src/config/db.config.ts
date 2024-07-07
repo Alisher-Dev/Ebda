@@ -2,6 +2,8 @@ import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { envConfig } from "./env.config";
 import { Product } from "src/modules/product/entities/product.entity";
 import { Media } from "src/modules/media/entities/media.entity";
+import { Attribute } from "src/modules/attribute/entities/attribute.entity";
+import { Value } from "src/modules/value/entities/value.entity";
 
 export const dbConfig: TypeOrmModuleOptions = {
   type: "mysql",
@@ -10,6 +12,6 @@ export const dbConfig: TypeOrmModuleOptions = {
   username: envConfig.database.user,
   password: envConfig.database.password,
   database: envConfig.database.name,
-  entities: [Product, Media],
+  entities: [Product, Media, Attribute, Value],
   synchronize: true,
 };

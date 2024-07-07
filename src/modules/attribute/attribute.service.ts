@@ -1,26 +1,57 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAttributeDto } from './dto/create-attribute.dto';
-import { UpdateAttributeDto } from './dto/update-attribute.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { CreateAttributeDto } from "./dto/create-attribute.dto";
+import { UpdateAttributeDto } from "./dto/update-attribute.dto";
+import { Attribute } from "./entities/attribute.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class AttributeService {
-  create(createAttributeDto: CreateAttributeDto) {
-    return 'This action adds a new attribute';
+  constructor(
+    @InjectRepository(Attribute)
+    private attributeRepository: Repository<Attribute>,
+  ) {}
+
+  async create(createAttributeDto: CreateAttributeDto) {
+    const { name } = createAttributeDto;
+    const newAttribute = new Attribute();
+
+    newAttribute.name = name;
+
+    const attribute = await this.attributeRepository.save(newAttribute);
+
+    return attribute;
   }
 
-  findAll() {
-    return `This action returns all attribute`;
+  async findAll() {
+    return await this.attributeRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} attribute`;
+  async findOne(id: number) {
+    const attribute = await this.attributeRepository.findOne({
+      where: { id },
+    });
+
+    if (!attribute) {
+      throw new NotFoundException(`attribute with id ${id} not found`);
+    }
+
+    return attribute;
   }
 
-  update(id: number, updateAttributeDto: UpdateAttributeDto) {
-    return `This action updates a #${id} attribute`;
+  async update(id: number, updateAttributeDto: UpdateAttributeDto) {
+    const attribute = await this.findOne(id);
+
+    attribute.name = updateAttributeDto.name ?? updateAttributeDto.name;
+    const updatedAttribute = await this.attributeRepository.save(attribute);
+
+    return updatedAttribute;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} attribute`;
+  async remove(id: number) {
+    const attribute = await this.findOne(id);
+    await this.attributeRepository.delete(attribute.id);
+
+    return `attribute with id ${id} removed`;
   }
 }
