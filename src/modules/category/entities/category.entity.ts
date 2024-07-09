@@ -11,5 +11,5 @@ export class Category extends RootEntity {
   views: number;
 
   @ManyToMany(() => Product, (product) => product.id)
-  Product_id: number;
+  product: Product[];
 }

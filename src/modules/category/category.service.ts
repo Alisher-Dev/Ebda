@@ -1,35 +1,56 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { Category } from "./entities/category.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class CategoryService {
-  create(createCategoryDto: CreateCategoryDto) {
+  constructor(
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
+  ) {}
+
+  async create(createCategoryDto: CreateCategoryDto) {
     const newCategory = new Category();
 
-    // newCategory.title;
+    newCategory.title = createCategoryDto.title;
+    newCategory.views = createCategoryDto.views;
 
-    return "create category";
+    const category = await this.categoryRepository.save(newCategory);
+
+    return category;
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async findAll() {
+    const category = await this.categoryRepository.find();
+    return category;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: number) {
+    const category = await this.categoryRepository.findOne({ where: { id } });
+    if (!category) {
+      throw new NotFoundException("category not found");
+    }
+
+    this.categoryRepository.update(category.id, { views: category.views + 1 });
+    return category;
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    // const media = await this.findOne(id);
-    // media.type = updateMediaDto.type ?? updateMediaDto.type;
-    // media.url = updateMediaDto.url ?? updateMediaDto.url;
-    // const updatedMedia = await this.mediaRepository.save(media);
-    // return updatedMedia;
+    const category = await this.findOne(id);
+
+    category.title = updateCategoryDto.title ?? updateCategoryDto.title;
+    category.views = updateCategoryDto.views ?? updateCategoryDto.views;
+
+    const updatedMedia = await this.categoryRepository.save(category);
+
+    return updatedMedia;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    await this.categoryRepository.delete(id);
+    return `category id = ${id}`;
   }
 }
