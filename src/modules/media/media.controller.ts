@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
 import { MediaService } from "./media.service";
 import { CreateMediaDto } from "./dto/create-media.dto";
 import { UpdateMediaDto } from "./dto/update-media.dto";
+import { FindAllDto } from "src/helpers/dto";
 
 @Controller("media")
 export class MediaController {
@@ -13,8 +14,8 @@ export class MediaController {
   }
 
   @Get()
-  findAll() {
-    return this.mediaService.findAll();
+  findAll(@Query() query: FindAllDto) {
+    return this.mediaService.findAll(query);
   }
 
   @Get(":id")
