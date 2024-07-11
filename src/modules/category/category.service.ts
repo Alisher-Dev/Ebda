@@ -4,6 +4,7 @@ import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { Category } from "./entities/category.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { apiResponse } from "src/helpers/apiResponse";
 
 @Injectable()
 export class CategoryService {
@@ -20,12 +21,12 @@ export class CategoryService {
 
     const category = await this.categoryRepository.save(newCategory);
 
-    return category;
+    return apiResponse(category);
   }
 
   async findAll() {
     const category = await this.categoryRepository.find();
-    return category;
+    return apiResponse(category);
   }
 
   async findOne(id: number) {
@@ -35,22 +36,22 @@ export class CategoryService {
     }
 
     this.categoryRepository.update(category.id, { views: category.views + 1 });
-    return category;
+    return apiResponse(category);
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     const category = await this.findOne(id);
 
-    category.title = updateCategoryDto.title ?? updateCategoryDto.title;
-    category.views = updateCategoryDto.views ?? updateCategoryDto.views;
+    category.data.title = updateCategoryDto.title ?? updateCategoryDto.title;
+    category.data.views = updateCategoryDto.views ?? updateCategoryDto.views;
 
-    const updatedMedia = await this.categoryRepository.save(category);
+    const updatedCategory = await this.categoryRepository.save(category.data);
 
-    return updatedMedia;
+    return apiResponse(updatedCategory);
   }
 
   async remove(id: number) {
     await this.categoryRepository.delete(id);
-    return `category id = ${id}`;
+    return apiResponse(`remove category id = ${id}`);
   }
 }

@@ -5,8 +5,17 @@ import { ProductModule } from "./modules/product/product.module";
 import { MediaModule } from "./modules/media/media.module";
 import { AttributeModule } from "./modules/attribute/attribute.module";
 import { CategoryModule } from "./modules/category/category.module";
+import { OrderModule } from "./modules/order/order.module";
 
 @Module({
-  imports: [TypeOrmModule.forRoot(dbConfig), ProductModule, MediaModule, AttributeModule, CategoryModule],
+  imports: [
+    TypeOrmModule.forRoot(dbConfig),
+    ProductModule,
+    MediaModule,
+    AttributeModule,
+    CategoryModule,
+    OrderModule,
+    OrderModule,
+  ],
 })
 export class AppModule {}
