@@ -6,6 +6,7 @@ import { MediaModule } from "./modules/media/media.module";
 import { AttributeModule } from "./modules/attribute/attribute.module";
 import { CategoryModule } from "./modules/category/category.module";
 import { OrderModule } from "./modules/order/order.module";
+import { FileUploadModule } from "./modules/uploadFile/uploadFile.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { OrderModule } from "./modules/order/order.module";
     CategoryModule,
     OrderModule,
     OrderModule,
+    FileUploadModule,
   ],
 })
 export class AppModule {}
