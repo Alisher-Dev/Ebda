@@ -7,6 +7,7 @@ import { AttributeModule } from "./modules/attribute/attribute.module";
 import { CategoryModule } from "./modules/category/category.module";
 import { OrderModule } from "./modules/order/order.module";
 import { FileUploadModule } from "./modules/uploadFile/uploadFile.module";
+import { ValueModule } from "./modules/value/value.module";
 
 @Module({
   imports: [
@@ -16,8 +17,8 @@ import { FileUploadModule } from "./modules/uploadFile/uploadFile.module";
     AttributeModule,
     CategoryModule,
     OrderModule,
-    OrderModule,
     FileUploadModule,
+    ValueModule,
   ],
 })
 export class AppModule {}

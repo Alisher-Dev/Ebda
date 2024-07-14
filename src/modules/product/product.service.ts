@@ -4,9 +4,10 @@ import { UpdateProductDto } from "./dto/update-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "./entities/product.entity";
 import { Repository } from "typeorm";
-import { CategoryService } from "../category/category.service";
 import { Category } from "../category/entities/category.entity";
 import { apiResponse } from "src/helpers/apiResponse";
+import { FindAllDto } from "src/helpers/dto";
+import { Pagination } from "src/helpers/pagination";
 
 @Injectable()
 export class ProductService {
@@ -21,24 +22,32 @@ export class ProductService {
   async create(createProductDto: CreateProductDto) {
     const newProduct = new Product();
 
-    newProduct.desc = createProductDto.desc;
-    newProduct.title = createProductDto.title;
-    newProduct.price = createProductDto.price;
-    newProduct.media = createProductDto.media_id;
     const category = await this.categoryRepository.findOne({ where: { id: createProductDto.category_id } });
     if (!category) {
       throw new NotFoundException("category not found");
     }
+
+    newProduct.desc = createProductDto.desc;
+    newProduct.title = createProductDto.title;
+    newProduct.price = createProductDto.price;
+    newProduct.media = createProductDto.media_id;
     newProduct.category = [category];
 
-    const products = await this.productRepository.save(newProduct);
+    const product = await this.productRepository.save(newProduct);
 
-    return apiResponse(products);
+    return apiResponse(product);
   }
 
-  async findAll() {
-    const products = await this.productRepository.find();
-    return apiResponse(products);
+  async findAll({ page, limit }: FindAllDto) {
+    const totalItems = await this.productRepository.count();
+    const pagination = new Pagination(totalItems, page, limit);
+
+    const products = await this.productRepository.find({
+      skip: pagination.offset,
+      take: pagination.limit,
+    });
+
+    return apiResponse(products, pagination);
   }
 
   async findOne(id: number) {
